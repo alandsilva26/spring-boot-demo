@@ -1,12 +1,16 @@
 package com.alandsilva.demo.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alandsilva.demo.dao.BrandDao;
 import com.alandsilva.demo.dao.CategoryRepository;
 import com.alandsilva.demo.dao.ProductDao;
+import com.alandsilva.demo.dao.ProductRepository;
 import com.alandsilva.demo.dto.ProductCreationDto;
+import com.alandsilva.demo.exception.NoSuchElementException;
 import com.alandsilva.demo.model.Brand;
 import com.alandsilva.demo.model.Category;
 import com.alandsilva.demo.model.Product;
@@ -19,7 +23,18 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDao productDao;
     @Autowired
+    private ProductRepository productRepository;
+    @Autowired
     private CategoryRepository categoryRepository;
+
+    @Override
+    public Product findById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isPresent()) {
+            return product.get();
+        }
+        throw new NoSuchElementException("No product with id = " + id);
+    }
 
     @Override
     public void createProduct(Product product) {
@@ -70,5 +85,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Iterable<Product> findByBrandId(Long id) {
         return productDao.findByBrandId(id);
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
     }
 }

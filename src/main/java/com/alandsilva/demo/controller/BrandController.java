@@ -3,6 +3,8 @@ package com.alandsilva.demo.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +32,10 @@ public class BrandController {
     }
 
     @PostMapping
-    public void postBrand(@RequestBody Brand brand) {
+    public ResponseEntity<HttpStatus> postBrand(
+            @RequestBody Brand brand) {
         brandDao.save(brand);
-        return;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
